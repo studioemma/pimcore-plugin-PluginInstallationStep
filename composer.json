@@ -1,0 +1,20 @@
+{
+    "name": "studioemma/plugin-installation-step",
+    "type": "pimcore-plugin",
+    "license": "MIT",
+    "description": "Pimcore 4 helper functions for plugin installations",
+    "keywords": ["pimcore","plugin"],
+    "homepage": "http://www.pimcore.org/",
+    "authors": [
+        {
+            "name": "Studio Emma",
+            "email": "info@studioemma.com",
+            "homepage": "http://www.studioemma.com/",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=7.0.0",
+        "pimcore/installer-plugin": ">=1"
+    }
+}

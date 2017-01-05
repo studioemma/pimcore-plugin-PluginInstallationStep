@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @copyright Copyright (c) 2016 Studio Emma. (http://www.studioemma.com)
+ */
+-->
+<zend-config xmlns:zf="http://framework.zend.com/xml/zend-config-xml/1.0/">
+		<plugin>
+
+            <!-- the plugin name [A-Za-z_] -->
+            <pluginName>PluginInstallationStep</pluginName>
+
+            <!-- a short description -->
+			<pluginDescription><![CDATA[Add installation capabilities to plugins]]></pluginDescription>
+
+            <!-- meta data -->
+            <pluginVersion>1.0</pluginVersion>
+            <pluginRevision>1</pluginRevision>
+            <pluginBuildTimestamp>0</pluginBuildTimestamp>
+
+            <!-- className of the plugin which extends Pimcore_API_Plugin_Abstract-->
+			<pluginClassName>\PluginInstallationStep\Plugin</pluginClassName>
+
+            <!-- include paths relative to plugin-directory -->
+			<pluginIncludePaths>
+				<path>/PluginInstallationStep/lib</path>
+			</pluginIncludePaths>
+
+			<!-- namespaces to register with autoloader-->
+			<pluginNamespaces>
+				<namespace>PluginInstallationStep</namespace>
+			</pluginNamespaces>
+
+		</plugin>
+</zend-config>
