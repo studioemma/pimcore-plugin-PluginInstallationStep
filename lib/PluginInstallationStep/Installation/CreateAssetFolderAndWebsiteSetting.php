@@ -77,7 +77,8 @@ class CreateAssetFolderAndWebsiteSetting implements InstallationStepInterface
 
         $folderClass = self::TYPE . '\Folder';
         if (isset($folderId)) {
-            $folder = $folderClass::getById($folderId);
+            // no need to get the folder because we know it exists
+            $folder = true;
         } else {
             $folder = $folderClass::getByPath('/' . $this->folderName);
         }
