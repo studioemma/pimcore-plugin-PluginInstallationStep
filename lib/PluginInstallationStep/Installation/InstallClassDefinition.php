@@ -62,8 +62,11 @@ class InstallClassDefinition implements InstallationStepInterface
      */
     public function isInstalled()
     {
-        $class = ClassDefinition::getByName($this->className);
-        return !is_null($class);
+        $definitionFile = PIMCORE_CLASS_DIRECTORY
+            . '/definition_' . $this->className . '.php';
+        $objectFile = PIMCORE_CLASS_DIRECTORY
+            . '/Object/' . $this->className . '.php';
+        return file_exists($definitionFile) && file_exists($objectFile);
     }
 
     /**
