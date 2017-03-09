@@ -4,14 +4,9 @@
 
 version=$1
 
-# version bump commit
-sed -e "s/\(\$application = new Application('.*', \).*\().*\)/\1'$version'\2/" \
-    -i cli/console.php
-git commit -asm "bump to version: $version"
-
 cat > tag-message.txt <<EOF
 Pimcore PluginInstallationStep $version
-===========================
+====================================
 
 *
 EOF
