@@ -66,16 +66,9 @@ class InstallFieldCollectionDefinition implements InstallationStepInterface
      */
     public function isInstalled()
     {
-        try {
-            $fieldCollection = Fieldcollection\Definition::getByKey(
-                $this->fieldCollectionName
-            );
-        } catch (Exception $e) {
-            // if field collection does not exist, getByKey will throw an
-            // exception
-            return false;
-        }
-        return !is_null($fieldCollection);
+        $fieldCollectionFile = PIMCORE_CLASS_DIRECTORY
+            . '/fieldcollections/' . $this->fieldCollectionName . '.php';
+        return file_exists($fieldCollectionFile);
     }
 
     /**

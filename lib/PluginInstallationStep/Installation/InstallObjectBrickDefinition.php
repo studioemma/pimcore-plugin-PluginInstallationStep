@@ -51,12 +51,9 @@ class InstallObjectBrickDefinition implements InstallationStepInterface
      */
     public function isInstalled()
     {
-        try {
-            $objectBrick = Definition::getByKey($this->objectBrickName);
-            return !is_null($objectBrick);
-        }catch(Exception $e) {
-            return false;
-        }
+        $objectBrickFile = PIMCORE_CLASS_DIRECTORY
+            . '/objectbricks/' . $this->objectBrickName . '.php';
+        return file_exists($objectBrickFile);
     }
 
     protected function getDataFile()
