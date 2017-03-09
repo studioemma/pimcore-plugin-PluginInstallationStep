@@ -7,10 +7,13 @@ namespace PluginInstallationStep\Installation;
 
 use Pimcore\Model\Asset;
 use Pimcore\Model\WebsiteSetting;
+use Pimcore\Cache;
 
 class CreateAssetFolderAndWebsiteSetting implements InstallationStepInterface
 {
     const TYPE = 'Asset';
+    const CACHEKEY = 'CAFAW';
+
     protected $configKey;
     protected $folderName;
 
@@ -70,20 +73,43 @@ class CreateAssetFolderAndWebsiteSetting implements InstallationStepInterface
 
     public function isInstalled()
     {
-        $setting = WebsiteSetting::getByName($this->configKey);
+        $setting = $this->getWebsiteSetting();
+
         if (!is_null($setting)) {
             $folderId = $setting->getData();
         }
 
         $folderClass = self::TYPE . '\Folder';
         if (isset($folderId)) {
-            // no need to get the folder because we know it exists
-            $folder = true;
+            $folder = $folderClass::getById($folderId);
         } else {
             $folder = $folderClass::getByPath('/' . $this->folderName);
         }
 
         return !is_null($setting) && !is_null($folder);
+    }
+
+    protected function getWebsiteSetting()
+    {
+        $cacheKey = self::CACHEKEY . '_' . $this->configKey;
+
+        if (false !== Cache::test($cacheKey)) {
+            return Cache::load($cacheKey);
+        }
+
+        $setting = WebsiteSetting::getByName($this->configKey);
+
+        $hasCacheWriteLock = Cache::hasWriteLock();
+        if ($hasCacheWriteLock) {
+            Cache::removeWriteLock();
+        }
+        // force writing of our dynamic dropdown cache
+        Cache::save($setting, $cacheKey, [], 3600, 0, true);
+        if ($hasCacheWriteLock) {
+            Cache::setWriteLock();
+        }
+
+        return $setting;
     }
 
     public function needsReloadAfterInstall()

@@ -7,10 +7,13 @@ namespace PluginInstallationStep\Installation;
 
 use Pimcore\Model\Object;
 use Pimcore\Model\WebsiteSetting;
+use Pimcore\Cache;
 
 class CreateObjectFolderAndWebsiteSetting implements InstallationStepInterface
 {
     const TYPE = 'Object';
+    const CACHEKEY = 'COFAW';
+
     protected $configKey;
     protected $folderName;
 
@@ -70,7 +73,8 @@ class CreateObjectFolderAndWebsiteSetting implements InstallationStepInterface
 
     public function isInstalled()
     {
-        $setting = WebsiteSetting::getByName($this->configKey);
+        $setting = $this->getWebsiteSetting();
+
         if (!is_null($setting)) {
             $folderId = $setting->getData();
         }
@@ -84,6 +88,29 @@ class CreateObjectFolderAndWebsiteSetting implements InstallationStepInterface
         }
 
         return !is_null($setting) && !is_null($folder);
+    }
+
+    protected function getWebsiteSetting()
+    {
+        $cacheKey = self::CACHEKEY . '_' . $this->configKey;
+
+        if (false !== Cache::test($cacheKey)) {
+            return Cache::load($cacheKey);
+        }
+
+        $setting = WebsiteSetting::getByName($this->configKey);
+
+        $hasCacheWriteLock = Cache::hasWriteLock();
+        if ($hasCacheWriteLock) {
+            Cache::removeWriteLock();
+        }
+        // force writing of our dynamic dropdown cache
+        Cache::save($setting, $cacheKey, [], 3600, 0, true);
+        if ($hasCacheWriteLock) {
+            Cache::setWriteLock();
+        }
+
+        return $setting;
     }
 
     public function needsReloadAfterInstall()
