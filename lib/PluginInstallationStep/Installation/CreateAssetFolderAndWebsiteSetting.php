@@ -99,14 +99,16 @@ class CreateAssetFolderAndWebsiteSetting implements InstallationStepInterface
 
         $setting = WebsiteSetting::getByName($this->configKey);
 
-        $hasCacheWriteLock = Cache::hasWriteLock();
-        if ($hasCacheWriteLock) {
-            Cache::removeWriteLock();
-        }
-        // force writing of our dynamic dropdown cache
-        Cache::save($setting, $cacheKey, [], 3600, 0, true);
-        if ($hasCacheWriteLock) {
-            Cache::setWriteLock();
+        if (! empty($setting)) {
+            $hasCacheWriteLock = Cache::hasWriteLock();
+            if ($hasCacheWriteLock) {
+                Cache::removeWriteLock();
+            }
+            // force writing of our dynamic dropdown cache
+            Cache::save($setting, $cacheKey, [], 3600, 0, true);
+            if ($hasCacheWriteLock) {
+                Cache::setWriteLock();
+            }
         }
 
         return $setting;
