@@ -35,10 +35,10 @@ class CreateWebsiteSetting implements InstallationStepInterface
             $setting = new WebsiteSetting();
             $setting->setName($this->configKey);
         }
-        $setting->setValues(array(
+        $setting->setValues([
             'type' => strtolower(self::TEXT),
             'data' => $this->data
-        ));
+        ]);
         $setting->save();
 
         return $this->isInstalled();
@@ -46,8 +46,7 @@ class CreateWebsiteSetting implements InstallationStepInterface
 
     public function uninstall()
     {
-        // do not delete the folder
-        // but do delete the setting
+        // delete the setting
         $setting = WebsiteSetting::getByName($this->configKey);
         $setting->delete();
 
